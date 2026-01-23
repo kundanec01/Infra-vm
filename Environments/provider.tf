@@ -1,7 +1,7 @@
 terraform {
     backend "azurerm" {
     resource_group_name  = "kk-rg"
-    storage_account_name = "storageaccn123 "
+    storage_account_name = "storageaccn1234 "
     container_name       = "kkcontainer"
     key                  = "kk.tfstate"
   }
