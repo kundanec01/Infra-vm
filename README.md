@@ -1,0 +1,2 @@
+# Infra-vm
+create vm
