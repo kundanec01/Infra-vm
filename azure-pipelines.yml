@@ -41,6 +41,8 @@ stages:
         command: 'custom'
         commandOptions: 'fmt -recursive'
         outputTo: 'console'
+        customCommand: 'terraform fmt'
+        environmentServiceNameAzureRM: 'kk-service-connection'
 
 # ================= PLAN =================
 - stage: plan
