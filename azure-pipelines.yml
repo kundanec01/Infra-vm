@@ -3,111 +3,104 @@ trigger: none
 pool: agent-ka-jhoond
 
 stages:
-  - stage: initial
-    displayName: "init-fmt-validate"
-    jobs:
-      - job: initial
-        displayName: "init-fmt-validate"
-        steps:
-        - task: TerraformInstaller@1
-          displayName: terraform install
-          inputs:
-            terraformVersion: 'latest'
+# ================= INIT / FMT / VALIDATE =================
+- stage: initial
+  displayName: "init-fmt-validate"
+  jobs:
+  - job: initial
+    steps:
+    - task: TerraformInstaller@1
+      displayName: Terraform Install
+      inputs:
+        terraformVersion: 'latest'
 
-        - task: TerraformTask@5
-          displayName: init
-          inputs:
-            provider: 'azurerm'
-            command: 'init'
-            workingDirectory: '$(System.DefaultWorkingDirectory)/Environment/'
-            backendServiceArm: 'kk-service-connection'
-            backendAzureRmOverrideSubscriptionID: 'c46beff3-d22c-4a6f-82a7-693fd94c69c4'
-            backendAzureRmResourceGroupName: 'kk-rg'
-            backendAzureRmStorageAccountName: 'kkstorageaccn1234'
-            backendAzureRmContainerName: 'kkcontainer'
-            backendAzureRmKey: 'new.tfstate'
+    - task: TerraformTask@5
+      displayName: Terraform Init
+      inputs:
+        provider: 'azurerm'
+        command: 'init'
+        workingDirectory: '$(System.DefaultWorkingDirectory)/Environment'
+        backendServiceArm: 'kk-service-connection'
+        backendAzureRmResourceGroupName: 'kk-rg'
+        backendAzureRmStorageAccountName: 'kkstorageaccn1234'
+        backendAzureRmContainerName: 'kkcontainer'
+        backendAzureRmKey: 'new.tfstate'
 
-        - task: TerraformTask@5
-          displayName: validate
-          inputs:
-            provider: 'azurerm'
-            command: 'validate'
-            workingDirectory: '$(System.DefaultWorkingDirectory)/Environment/'
+    - task: TerraformTask@5
+      displayName: Terraform Validate
+      inputs:
+        provider: 'azurerm'
+        command: 'validate'
+        workingDirectory: '$(System.DefaultWorkingDirectory)/Environment'
 
-        - task: TerraformTask@5
-          displayName: fmt
-          inputs:
-            provider: 'azurerm'
-            command: 'custom'
-            commandOptions: 'fmt -recursive'
-            outputTo: 'console'
-            environmentServiceNameAzureRM: 'kk-service-connection'
-            environmentAzureRmOverrideSubscriptionID: 'c46beff3-d22c-4a6f-82a7-693fd94c69c4'
+    - task: TerraformTask@5
+      displayName: Terraform FMT
+      inputs:
+        provider: 'azurerm'
+        command: 'custom'
+        commandOptions: 'fmt -recursive'
+        outputTo: 'console'
 
-  - stage: plan
-    displayName: plan
-    jobs:
-      - job: plan
-        displayName: "plan"
-        steps:  
-        - task: TerraformTask@5
-          displayName: init
-          inputs:
-            provider: 'azurerm'
-            command: 'init'
-            workingDirectory: '$(System.DefaultWorkingDirectory)/Environment/'
-            backendServiceArm: 'kk-serviceconnection'
-            backendAzureRmOverrideSubscriptionID: 'c46beff3-d22c-4a6f-82a7-693fd94c69c4'
-            backendAzureRmResourceGroupName: 'kk-rg'
-            backendAzureRmStorageAccountName: 'kkstorageaccn1234'
-            backendAzureRmContainerName: 'kkcontainer'
-            backendAzureRmKey: 'new.tfstate'
+# ================= PLAN =================
+- stage: plan
+  displayName: "plan"
+  jobs:
+  - job: plan
+    steps:
+    - task: TerraformTask@5
+      displayName: Terraform Init
+      inputs:
+        provider: 'azurerm'
+        command: 'init'
+        workingDirectory: '$(System.DefaultWorkingDirectory)/Environment'
+        backendServiceArm: 'kk-service-connection'
+        backendAzureRmResourceGroupName: 'kk-rg'
+        backendAzureRmStorageAccountName: 'kkstorageaccn1234'
+        backendAzureRmContainerName: 'kkcontainer'
+        backendAzureRmKey: 'new.tfstate'
 
-        - task: TerraformTask@5
-          displayName: plan
-          inputs:
-            provider: 'azurerm'
-            command: 'plan'
-            workingDirectory: '$(System.DefaultWorkingDirectory)/Environment/'
-            environmentServiceNameAzureRM: 'kk-service-connection'
-            environmentAzureRmOverrideSubscriptionID: 'c46beff3-d22c-4a6f-82a7-693fd94c69c4'
+    - task: TerraformTask@5
+      displayName: Terraform Plan
+      inputs:
+        provider: 'azurerm'
+        command: 'plan'
+        workingDirectory: '$(System.DefaultWorkingDirectory)/Environment'
+        environmentServiceNameAzureRM: 'kk-service-connection'
 
-  - stage: manual_validation
-    jobs:
-      - job: "manual_validation"
-        displayName: "manual_validation"
-        pool: server
-        steps:
-        - task: ManualValidation@1
-          displayName: manual_validation
-          inputs:
-            notifyUsers: 'rahulpateriya287@gmail.com'
-            approvers: 'kundanec7@gmail.com'
-            instructions: 'Hi Kindly approve the job'
+# ================= MANUAL APPROVAL =================
+- stage: manual_validation
+  displayName: "manual_approval"
+  jobs:
+  - job: approval
+    pool: server
+    steps:
+    - task: ManualValidation@1
+      inputs:
+        notifyUsers: 'kundanec7@gmail.com'
+        instructions: 'Please approve to proceed with Terraform Apply'
 
-  - stage: apply
-    displayName: apply
-    jobs:
-      - job: apply
-        displayName: "apply"
-        steps:  
-        - task: TerraformTask@5
-          displayName: init
-          inputs:
-            provider: 'azurerm'
-            command: 'init'
-            workingDirectory: '$(System.DefaultWorkingDirectory)/Environment/'
-            backendServiceArm: 'kk-ka-serviceconnection'
-            backendAzureRmOverrideSubscriptionID: 'c46beff3-d22c-4a6f-82a7-693fd94c69c4'
-            backendAzureRmResourceGroupName: 'kk-rg'
-            backendAzureRmStorageAccountName: 'kkstorageaccn1234'
-            backendAzureRmContainerName: 'kkcontainer'
-            backendAzureRmKey: 'new.tfstate'
+# ================= APPLY =================
+- stage: apply
+  displayName: "apply"
+  jobs:
+  - job: apply
+    steps:
+    - task: TerraformTask@5
+      displayName: Terraform Init
+      inputs:
+        provider: 'azurerm'
+        command: 'init'
+        workingDirectory: '$(System.DefaultWorkingDirectory)/Environment'
+        backendServiceArm: 'kk-service-connection'
+        backendAzureRmResourceGroupName: 'kk-rg'
+        backendAzureRmStorageAccountName: 'kkstorageaccn1234'
+        backendAzureRmContainerName: 'kkcontainer'
+        backendAzureRmKey: 'new.tfstate'
 
-        - task: TerraformTask@5
-          displayName: apply
-          inputs:
-            provider: 'azurerm'
-            command: 'apply'
-            workingDirectory: '$(System.DefaultWorkingDirectory)/Environment/'
-            environmentServiceNameAzureRM: 'kk-service-connection'
+    - task: TerraformTask@5
+      displayName: Terraform Apply
+      inputs:
+        provider: 'azurerm'
+        command: 'apply'
+        workingDirectory: '$(System.DefaultWorkingDirectory)/Environment'
+        environmentServiceNameAzureRM: 'kk-service-connection'
