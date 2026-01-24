@@ -12,14 +12,14 @@ stages:
     - task: TerraformInstaller@1
       displayName: Terraform Install
       inputs:
-        terraformVersion: '1.5.7'
+        terraformVersion: 'latest'
 
     - task: TerraformTask@5
       displayName: Terraform Init
       inputs:
         provider: 'azurerm'
         command: 'init'
-        workingDirectory: '$(System.DefaultWorkingDirectory)/Environment'
+        workingDirectory: '$(System.DefaultWorkingDirectory)/Environments'
         backendServiceArm: 'kk-service-connection'
         backendAzureRmOverrideSubscriptionID: 'c46beff3-d22c-4a6f-82a7-693fd94c69c4'
         backendAzureRmResourceGroupName: 'kk-rg'
@@ -32,7 +32,7 @@ stages:
       inputs:
         provider: 'azurerm'
         command: 'validate'
-        workingDirectory: '$(System.DefaultWorkingDirectory)/Environment'
+        workingDirectory: '$(System.DefaultWorkingDirectory)/Environments'
 
     - task: TerraformTask@5
       displayName: Terraform FMT
@@ -53,7 +53,7 @@ stages:
       inputs:
         provider: 'azurerm'
         command: 'init'
-        workingDirectory: '$(System.DefaultWorkingDirectory)/Environment'
+        workingDirectory: '$(System.DefaultWorkingDirectory)/Environments'
         backendServiceArm: 'kk-service-connection'
         backendAzureRmResourceGroupName: 'kk-rg'
         backendAzureRmStorageAccountName: 'kkstorageaccn1234'
@@ -65,7 +65,7 @@ stages:
       inputs:
         provider: 'azurerm'
         command: 'plan'
-        workingDirectory: '$(System.DefaultWorkingDirectory)/Environment'
+        workingDirectory: '$(System.DefaultWorkingDirectory)/Environments'
         environmentServiceNameAzureRM: 'kk-service-connection'
 
 # ================= MANUAL APPROVAL =================
@@ -91,7 +91,7 @@ stages:
       inputs:
         provider: 'azurerm'
         command: 'init'
-        workingDirectory: '$(System.DefaultWorkingDirectory)/Environment'
+        workingDirectory: '$(System.DefaultWorkingDirectory)/Environments'
         backendServiceArm: 'kk-service-connection'
         backendAzureRmResourceGroupName: 'kk-rg'
         backendAzureRmStorageAccountName: 'kkstorageaccn1234'
@@ -103,5 +103,5 @@ stages:
       inputs:
         provider: 'azurerm'
         command: 'apply'
-        workingDirectory: '$(System.DefaultWorkingDirectory)/Environment'
+        workingDirectory: '$(System.DefaultWorkingDirectory)/Environments'
         environmentServiceNameAzureRM: 'kk-service-connection'
