@@ -2,7 +2,7 @@ resource "azurerm_virtual_machine" "vm1" {
   name                  = var.vm_name
   location              = var.rg_location
   resource_group_name   = var.rg_name
-  network_interface_ids = ["/subscriptions/c46beff3-d22c-4a6f-82a7-693fd94c69c4/resourceGroups/kundan-rg/providers/Microsoft.Network/networkInterfaces/kk-nic"]
+  network_interface_ids = "/subscriptions/c46beff3-d22c-4a6f-82a7-693fd94c69c4/resourceGroups/kundan-rg/providers/Microsoft.Network/networkInterfaces/kk-nic"
   vm_size               = var.vm_size
 
   storage_image_reference {
