@@ -23,7 +23,7 @@ stages:
         backendServiceArm: 'kk-service-connection'
         backendAzureRmOverrideSubscriptionID: 'c46beff3-d22c-4a6f-82a7-693fd94c69c4'
         backendAzureRmResourceGroupName: 'kk-rg'
-        backendAzureRmStorageAccountName: 'kkstorageaccn1234'
+        backendAzureRmStorageAccountName: 'storageaccn1234'
         backendAzureRmContainerName: 'kkcontainer'
         backendAzureRmKey: 'new.tfstate'
 
