@@ -1,11 +1,11 @@
 trigger: none
 pool:
-  -name: agent-ka-jhoond
+  name: agent-ka-jhoond
 jobs:
   - job: job1
     displayName: BuildJob
     workspace:
-      clean: output
+      clean: outputs
     steps: 
     - task: Bash@3
       inputs:
