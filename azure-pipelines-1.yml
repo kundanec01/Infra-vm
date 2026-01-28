@@ -7,10 +7,10 @@ jobs:
     workspace:
       clean: outputs
     steps: 
-    - task: Bash@3
+    - task: PowerShell@2
       inputs:
         targetType: 'inline'
         script: |
-          # Write your commands here
+          # Write your PowerShell commands here.
           
-          echo My first job
+          Write-Host "This is my first job"
