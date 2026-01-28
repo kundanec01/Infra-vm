@@ -1,4 +1,16 @@
-trigger:
-  -none 
-
-pool:agent-ka-jhoond
+trigger: none
+pool:
+  -name: agent-ka-jhoond
+jobs:
+  - job: job1
+    displayName: BuildJob
+    workspace:
+      clean: output
+    steps: 
+    - task: Bash@3
+      inputs:
+        targetType: 'inline'
+        script: |
+          # Write your commands here
+          
+          echo My first job
